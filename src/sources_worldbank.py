@@ -11,13 +11,11 @@ WB_INDICATORS = {
 }
 
 
-def fetch_world_bank(country_iso3: str) -> list[dict]:
 def fetch_world_bank(country_iso3: str, ttl_seconds: int = 60 * 60 * 24) -> list[dict]:
     now = datetime.now(timezone.utc).isoformat()
     rows: list[dict] = []
     for indicator_id, (code, unit) in WB_INDICATORS.items():
         url = f"https://api.worldbank.org/v2/country/{country_iso3}/indicator/{code}?format=json&per_page=80"
-        payload = fetch_with_cache(url, as_json=True, timeout=20)
         payload = fetch_with_cache(url, as_json=True, timeout=20, ttl_seconds=ttl_seconds)
         if not isinstance(payload, list) or len(payload) < 2:
             continue

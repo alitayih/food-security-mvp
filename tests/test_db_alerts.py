@@ -1,5 +1,5 @@
 from src.alerts import add_alert_rule, evaluate_alerts
-from src.db import get_connection, init_db, upsert_meta, upsert_values
+from src.db import get_connection, get_db_path, get_latest_ingestion_run, init_db, upsert_meta, upsert_values
 from src.ingest import ingest_country
 from src.scenarios import record_scenario
 
@@ -69,3 +69,18 @@ def test_record_scenario_table_exists():
     init_db(conn)
     sid = record_scenario(conn, 'KEN', 'currency_depreciation', 50.0, 6)
     assert sid > 0
+
+
+def test_ingestion_run_recorded():
+    conn = get_connection(':memory:')
+    init_db(conn)
+    ingest_country(conn, 'KEN', demo_mode=True)
+    last = get_latest_ingestion_run(conn, 'KEN')
+    assert last is not None
+    assert last['mode'] == 'demo'
+
+
+def test_get_db_path_memory():
+    conn = get_connection(':memory:')
+    init_db(conn)
+    assert get_db_path(conn) == ':memory:'
