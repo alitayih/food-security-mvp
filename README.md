@@ -1,49 +1,72 @@
 # Food Security Early Warning - Public Streamlit MVP
 
+## VERSION / CHANGELOG
+
+- **Date:** 2026-02-13
+- **Version:** v0.5.0
+- **Today’s update:**
+  - Restored full Streamlit MVP flow (Dashboard, Alerts, Scenario Simulator, Export) with stable hosted behavior.
+  - Confirmed health-check diagnostics (DB path, ingestion mode, latest per-country ingestion time).
+  - Kept pinned countries first (JOR, QAT, USA, SAU, EGY) with Arabic display names.
+  - Verified fallback-safe ingestion, TTL-driven disk cache, and demo mode reliability.
+
+## Live Demo
+
+- Public URL: **https://alitayih-foodsecurity.streamlit.app/**
+
 Deploy-ready Streamlit app for geopolitics-informed food security monitoring.
 
 ## Deploy in 3 minutes (Streamlit Community Cloud - public URL)
 
-1. Push this repo to GitHub as **food-security-mvp** (public).
-1. Push this repo to GitHub.
-2. Open Streamlit Community Cloud -> **New app** -> select repo/branch.
+1. Push this repo to GitHub as **alitayih/food-security-mvp** (public).
+2. Open Streamlit Community Cloud → **New app** → select repo/branch.
 3. Set **Main file path** to `streamlit_app.py` and deploy.
+4. Public app URL (expected): **https://alitayih-foodsecurity.streamlit.app/**
 
 That is enough for a public URL. No end-user installation required.
+
+### If repo changed, update Streamlit app settings
+
+In Streamlit Community Cloud app settings, use:
+- **Repo**: `alitayih/food-security-mvp`
+- **Branch**: `main`
+- **Main file path**: `streamlit_app.py`
 
 ---
 
 ## What the app includes
 
 - **Country Dashboard**
-  - Sidebar filters: country ISO3, date range, indicator selector
+  - Sidebar filters: country ISO3, date range, indicator multiselect
   - Summary cards: overall risk + food/conflict/macro proxies
   - Charts: indicator time series, category proxy chart, score trend
-  - Explainability expander (weights, normalized inputs, top contributors)
+  - Explainability panel: weights, normalized inputs, top contributors
+  - Dataset provenance panel: source, unit, coverage window, source URL
 - **Alerts**
   - Create above/below threshold rules and evaluate against latest data
+  - Persist and display triggered events
 - **Scenario Simulator**
   - Shocks: `currency_depreciation`, `commodity_price_spike`, `conflict_spike`
-  - Outputs adjusted indicators and before/after risk score
+  - Outputs adjusted indicators + before/after risk score
+  - Stores scenario runs in SQLite
 - **Export**
-  - Download filtered data as CSV/JSON
-
-- **Nicer UI improvements**
-  - Cleaner metric cards and chart layout
-  - Language toggle **EN/AR** for core labels
-  - Dataset provenance panel (indicator source, unit, coverage, source URL)
-  - Sidebar cache TTL control (1-168 hours)
+  - Download currently filtered data as CSV/JSON
+- **UX Enhancements**
+  - EN/AR language toggle via a central dictionary
+  - Pinned countries first in selector: JOR, QAT, USA, SAU, EGY
+  - Health check panel for runtime diagnostics
+  - Sidebar cache TTL control (1–168 hours)
 
 ## Reliability and demo mode
 
 - App works without API keys.
 - Uses 2 no-key public sources:
-  - World Bank API
+  - World Bank API (macro indicators)
   - OWID undernourishment dataset
-- Uses bundled demo conflict + fallback demo data under `data/demo`.
-- Ingestion failures automatically fall back to demo values.
+- Uses bundled demo conflict/fallback data under `data/demo`.
+- Ingestion failures automatically fall back to demo values (`fallback_demo`).
 - Disk cache with TTL + retry/backoff for API calls.
-- TTL can be adjusted from the sidebar in hosted app runtime.
+- TTL is runtime-adjustable from sidebar.
 
 Force demo mode:
 
@@ -70,7 +93,7 @@ streamlit run streamlit_app.py
 ## Streamlit secrets / env vars
 
 No secrets are required for baseline operation.
-Optional values can be added in Streamlit Cloud **Advanced settings -> Secrets**:
+Optional values can be added in Streamlit Cloud **Advanced settings → Secrets**:
 
 ```toml
 OPENAI_API_KEY=""
@@ -89,6 +112,8 @@ Tables:
 - `indicators_values(country_iso3, date, indicator_id, value, unit, source, last_updated)`
 - `alerts(alert_id, country_iso3, indicator_id, direction, threshold, created_at)`
 - `alert_events(event_id, alert_id, triggered_at, observed_value, date)`
+- `scenarios(scenario_id, country_iso3, shock_type, severity, horizon, created_at)`
+- `ingestion_runs(run_id, country_iso3, mode, ingested_at)`
 
 ## Add a new indicator/source
 
@@ -98,7 +123,7 @@ Tables:
    - `src/sources_food.py`
    - `src/sources_conflict.py`
 3. Ensure ingestion mapping exists in `src/ingest.py`.
-4. Ensure new indicator appears in score logic and category mapping in `src/scoring.py`.
+4. Ensure new indicator appears in score logic/category mapping in `src/scoring.py`.
 5. Add tests under `tests/`.
 
 ## Project structure
