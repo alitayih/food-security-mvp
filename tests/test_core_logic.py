@@ -5,6 +5,7 @@ from src.scenarios import simulate
 from src.scoring import compute_scores
 from src.sources_conflict import load_demo_data
 from src.utils import clamp, country_display_name, deterministic_summary, ordered_countries, to_risk_scale
+from src.utils import clamp, deterministic_summary, to_risk_scale
 
 
 def test_clamp_low():

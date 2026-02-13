@@ -14,6 +14,7 @@ from src.ingest import ingest_country
 from src.scenarios import record_scenario, simulate
 from src.scoring import compute_scores
 from src.utils import country_display_name, deterministic_summary, ordered_countries
+from src.utils import deterministic_summary
 
 st.set_page_config(page_title="Food Security Early Warning", layout="wide")
 
@@ -105,6 +106,7 @@ country = st.sidebar.selectbox(
     index=0,
     format_func=lambda iso: country_display_name(iso, lang),
 )
+country = st.sidebar.selectbox(T["country"], ["KEN", "SDN", "YEM"])
 demo_mode = st.sidebar.toggle(T["demo"], value=os.getenv("DEMO_MODE", "0") == "1")
 ttl_hours = int(st.sidebar.slider(T["ttl"], min_value=1, max_value=168, value=24, step=1))
 
