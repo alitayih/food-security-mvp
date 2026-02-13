@@ -13,6 +13,7 @@ from src.db import get_connection, init_db, query_country_values
 from src.ingest import ingest_country
 from src.scenarios import record_scenario, simulate
 from src.scoring import compute_scores
+from src.utils import country_display_name, deterministic_summary, ordered_countries
 from src.utils import deterministic_summary
 
 st.set_page_config(page_title="Food Security Early Warning", layout="wide")
@@ -22,6 +23,7 @@ I18N = {
         "app_title": "Food Security MVP",
         "page": "Page",
         "country": "Country (ISO3)",
+        "pinned": "Pinned Countries",
         "demo": "Offline demo mode",
         "ttl": "Cache TTL (hours)",
         "mode": "Ingestion mode",
@@ -53,6 +55,7 @@ I18N = {
         "app_title": "نظام إنذار الأمن الغذائي",
         "page": "الصفحة",
         "country": "الدولة (ISO3)",
+        "pinned": "الدول المثبتة",
         "demo": "وضع العرض بدون إنترنت",
         "ttl": "مدة التخزين المؤقت (ساعة)",
         "mode": "وضع جلب البيانات",
@@ -90,6 +93,19 @@ lang = st.sidebar.segmented_control("Language / اللغة", options=["EN", "AR"
 T = I18N[lang]
 
 page = st.sidebar.radio(T["page"], [T["dashboard"], T["alerts"], T["sim"], T["export"]])
+
+try:
+    demo_country_list = pd.read_csv("data/demo/indicators_values.csv")["country_iso3"].dropna().unique().tolist()
+except Exception:
+    demo_country_list = ["KEN", "SDN", "YEM"]
+country_options = ordered_countries(demo_country_list)
+st.sidebar.caption(f"{T['pinned']}: JOR, QAT, USA, SAU, EGY")
+country = st.sidebar.selectbox(
+    T["country"],
+    country_options,
+    index=0,
+    format_func=lambda iso: country_display_name(iso, lang),
+)
 country = st.sidebar.selectbox(T["country"], ["KEN", "SDN", "YEM"])
 demo_mode = st.sidebar.toggle(T["demo"], value=os.getenv("DEMO_MODE", "0") == "1")
 ttl_hours = int(st.sidebar.slider(T["ttl"], min_value=1, max_value=168, value=24, step=1))

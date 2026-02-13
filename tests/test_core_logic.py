@@ -4,6 +4,7 @@ from src.cache import cache_get, cache_set
 from src.scenarios import simulate
 from src.scoring import compute_scores
 from src.sources_conflict import load_demo_data
+from src.utils import clamp, country_display_name, deterministic_summary, ordered_countries, to_risk_scale
 from src.utils import clamp, deterministic_summary, to_risk_scale
 
 
@@ -66,3 +67,12 @@ def test_cache_roundtrip(tmp_path: Path):
 def test_demo_loader_has_rows():
     meta, values = load_demo_data()
     assert len(meta) > 0 and len(values) > 0
+
+
+def test_ordered_countries_pinned_first():
+    ordered = ordered_countries(["KEN", "SDN", "USA", "EGY", "JOR"])
+    assert ordered[:5] == ["JOR", "QAT", "USA", "SAU", "EGY"]
+
+
+def test_country_display_name_arabic():
+    assert country_display_name("JOR", "AR") == "الأردن (JOR)"

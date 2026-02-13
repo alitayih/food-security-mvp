@@ -4,6 +4,7 @@ Deploy-ready Streamlit app for geopolitics-informed food security monitoring.
 
 ## Deploy in 3 minutes (Streamlit Community Cloud - public URL)
 
+1. Push this repo to GitHub as **food-security-mvp** (public).
 1. Push this repo to GitHub.
 2. Open Streamlit Community Cloud -> **New app** -> select repo/branch.
 3. Set **Main file path** to `streamlit_app.py` and deploy.

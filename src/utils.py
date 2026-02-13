@@ -1,5 +1,21 @@
 from __future__ import annotations
 
+PINNED_COUNTRIES = ["JOR", "QAT", "USA", "SAU", "EGY"]
+COUNTRY_NAME_EN = {
+    "JOR": "Jordan",
+    "QAT": "Qatar",
+    "USA": "United States",
+    "SAU": "Saudi Arabia",
+    "EGY": "Egypt",
+}
+COUNTRY_NAME_AR = {
+    "JOR": "الأردن",
+    "QAT": "قطر",
+    "USA": "الولايات المتحدة",
+    "SAU": "السعودية",
+    "EGY": "مصر",
+}
+
 
 def clamp(v: float, low: float = 0.0, high: float = 100.0) -> float:
     return max(low, min(high, v))
@@ -21,3 +37,17 @@ def deterministic_summary(country: str, risk: float, top_contributors: list[str]
         f"Primary contributors are {drivers}. "
         f"Triggered alerts in this view: {alert_count}."
     )
+
+
+def ordered_countries(available_iso3: list[str]) -> list[str]:
+    unique = sorted(set(available_iso3))
+    rest = sorted([c for c in unique if c not in PINNED_COUNTRIES])
+    return PINNED_COUNTRIES + rest
+
+
+def country_display_name(iso3: str, lang: str = "EN") -> str:
+    if lang == "AR" and iso3 in COUNTRY_NAME_AR:
+        return f"{COUNTRY_NAME_AR[iso3]} ({iso3})"
+    if iso3 in COUNTRY_NAME_EN:
+        return f"{COUNTRY_NAME_EN[iso3]} ({iso3})"
+    return iso3
