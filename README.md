@@ -4,6 +4,7 @@ Deploy-ready Streamlit app for geopolitics-informed food security monitoring.
 
 ## Deploy in 3 minutes (Streamlit Community Cloud - public URL)
 
+1. Push this repo to GitHub as **food-security-mvp** (public).
 1. Push this repo to GitHub.
 2. Open Streamlit Community Cloud -> **New app** -> select repo/branch.
 3. Set **Main file path** to `streamlit_app.py` and deploy.
@@ -27,6 +28,12 @@ That is enough for a public URL. No end-user installation required.
 - **Export**
   - Download filtered data as CSV/JSON
 
+- **Nicer UI improvements**
+  - Cleaner metric cards and chart layout
+  - Language toggle **EN/AR** for core labels
+  - Dataset provenance panel (indicator source, unit, coverage, source URL)
+  - Sidebar cache TTL control (1-168 hours)
+
 ## Reliability and demo mode
 
 - App works without API keys.
@@ -36,6 +43,7 @@ That is enough for a public URL. No end-user installation required.
 - Uses bundled demo conflict + fallback demo data under `data/demo`.
 - Ingestion failures automatically fall back to demo values.
 - Disk cache with TTL + retry/backoff for API calls.
+- TTL can be adjusted from the sidebar in hosted app runtime.
 
 Force demo mode:
 

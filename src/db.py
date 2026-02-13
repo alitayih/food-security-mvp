@@ -72,6 +72,16 @@ def init_db(conn: sqlite3.Connection) -> None:
             date TEXT NOT NULL,
             FOREIGN KEY(alert_id) REFERENCES alerts(alert_id)
         );
+
+
+        CREATE TABLE IF NOT EXISTS scenarios(
+            scenario_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            country_iso3 TEXT NOT NULL,
+            shock_type TEXT NOT NULL,
+            severity REAL NOT NULL,
+            horizon INTEGER NOT NULL,
+            created_at TEXT NOT NULL
+        );
         """
     )
     conn.commit()

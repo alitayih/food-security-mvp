@@ -9,6 +9,7 @@ from .sources_worldbank import fetch_world_bank
 
 
 def ingest_country(conn, country_iso3: str, demo_mode: bool = False) -> str:
+def ingest_country(conn, country_iso3: str, demo_mode: bool = False, ttl_hours: int = 24) -> str:
     force_demo = os.getenv("DEMO_MODE", "0") == "1"
     meta, demo_values = load_demo_data()
     upsert_meta(conn, meta)
@@ -27,6 +28,10 @@ def ingest_country(conn, country_iso3: str, demo_mode: bool = False) -> str:
         live_rows = []
         live_rows.extend(fetch_world_bank(country_iso3))
         live_rows.extend(fetch_food_source(country_iso3))
+        ttl_seconds = max(1, ttl_hours) * 3600
+        live_rows = []
+        live_rows.extend(fetch_world_bank(country_iso3, ttl_seconds=ttl_seconds))
+        live_rows.extend(fetch_food_source(country_iso3, ttl_seconds=ttl_seconds))
         values = seed_demo + live_rows
         if not values:
             raise RuntimeError("No live values")

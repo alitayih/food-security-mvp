@@ -1,6 +1,7 @@
 from src.alerts import add_alert_rule, evaluate_alerts
 from src.db import get_connection, init_db, upsert_meta, upsert_values
 from src.ingest import ingest_country
+from src.scenarios import record_scenario
 
 
 def setup_conn():
@@ -61,3 +62,10 @@ def test_ingest_country_demo_mode():
     init_db(conn)
     mode = ingest_country(conn, 'KEN', demo_mode=True)
     assert mode == 'demo'
+
+
+def test_record_scenario_table_exists():
+    conn = get_connection(':memory:')
+    init_db(conn)
+    sid = record_scenario(conn, 'KEN', 'currency_depreciation', 50.0, 6)
+    assert sid > 0
