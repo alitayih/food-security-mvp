@@ -1,0 +1,8 @@
+indicator_id,indicator_name,category,unit,source,source_url
+inflation,"Inflation, consumer prices (annual %)",macro,%,World Bank,https://api.worldbank.org
+gdp_growth,GDP growth (annual %),macro,%,World Bank,https://api.worldbank.org
+unemployment,Unemployment rate,macro,%,World Bank,https://api.worldbank.org
+undernourishment,Prevalence of undernourishment,food,%,Our World in Data,https://ourworldindata.org
+food_price_stress,Food price stress index,food,index,Demo,local
+conflict_events,Conflict events,conflict,count,Demo,local
+currency_pressure,Currency pressure index,macro,index,Demo,local
